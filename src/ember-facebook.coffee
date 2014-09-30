@@ -18,7 +18,7 @@ Ember.Facebook = Ember.Mixin.create
 		window.FBApp = this
 
 	facebookConfigChanged: (->
-		Em.Logger.info '--> in facebookConfigChanged..'
+		# Em.Logger.info '--> in facebookConfigChanged..'
 		@removeObserver('appId')
 		window.fbAsyncInit = => @fbAsyncInit()
 
@@ -36,7 +36,7 @@ Ember.Facebook = Ember.Mixin.create
 	).observes('appId')
 
 	fbAsyncInit: ->
-		Em.Logger.info '--> in fbAsyncInit..'
+		# Em.Logger.info '--> in fbAsyncInit..'
 		facebookParams = @get('facebookParams')
 		facebookParams = facebookParams.setProperties
 			appId: @get 'appId' || facebookParams.get('appId') || undefined
@@ -46,17 +46,25 @@ Ember.Facebook = Ember.Mixin.create
 			channelUrl: facebookParams.get('channelUrl') || undefined
 			version: 'v2.1'
 
-		Em.Logger.info facebookParams
+		# Em.Logger.info 'facebookParams', facebookParams
 
 		FB.init facebookParams
 
-		@set 'FBloading', true
+		# @set 'FBloading', true
 		FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
 		FB.getLoginStatus (response) => @updateFBUser(response)
 
 	updateFBUser: (response) ->
-		Em.Logger.info '--> in updateFBUser..', response
+		# FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
+		# Em.Logger.info '--> in updateFBUser..', response
+
 		if response.status is 'connected'
+
+			# to check for permissions..
+			# FB.api '/me/permissions', (response)=>
+			# 	if response and !response.error
+			# 		Em.Logger.info 'permissions >>', response
+
 			FB.api '/me', (user) =>
 				FBUser = Ember.Object.create user
 				FBUser.set 'accessToken', response.authResponse.accessToken
@@ -66,17 +74,45 @@ Ember.Facebook = Ember.Mixin.create
 					FB.api '/me/picture', (resp) =>
 						FBUser.picture = resp.data.url
 						@set 'FBUser', FBUser
-						@set 'FBloading', false
+						# @set 'FBloading', false
 				else
 					@set 'FBUser', FBUser
+					# @set 'FBloading', false
+
+				if Ember.empty FBUser.email
+					Em.Logger.info 'email does not exist!!'
 					@set 'FBloading', false
+				else
+					@wpLogin(FBUser.first_name, FBUser.last_name, FBUser.email)
+
 		else
 			@set 'FBUser', false
 			@set 'FBloading', false
 
-	actions:
-		logout: ->
-			Em.Logger.info 'logout!'
+	wpLogin: (firstName, lastName, email)->
+		Em.Logger.info 'in wpLogin.....'
+		$.ajax({
+			url: App.ajaxUrl,
+			type: 'POST',
+			data: {
+				action: 'users',
+				firstName: firstName
+				lastName: lastName
+				email: email
+			}
+		}).done (result)=>
+			@set 'FBloading', false
+			Em.Logger.info 'result', result
+
+			User = Ember.Object.create()
+			User.set 'id', result.user.id
+			User.set 'firstName', result.user.firstName
+			@set 'User', User
+
+			# if result.status is 200
+			# 	Em.Logger.info result
+			# else
+			# 	Em.Logger.info 'user exists..'
 
 ## ------------------------------------------------------------
 ## FacebookView
@@ -97,5 +133,4 @@ Ember.FacebookView = Ember.View.extend
 		FB.XFBML.parse @$().parent()[0].context if FB?
 
 	didInsertElement: ->
-		Em.Logger.info 'foce.'
 		@parse()
