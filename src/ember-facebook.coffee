@@ -83,23 +83,24 @@ Ember.Facebook = Ember.Mixin.create
 					Em.Logger.info 'email does not exist!!'
 					@set 'FBloading', false
 				else
-					@wpLogin(FBUser.first_name, FBUser.last_name, FBUser.email)
+					@wpLogin(FBUser)
 
 		else
 			@set 'User', false
 			@set 'FBUser', false
 			@set 'FBloading', false
 
-	wpLogin: (firstName, lastName, email)->
+	wpLogin: (FBUser)->
 		Em.Logger.info 'in wpLogin.....'
 		$.ajax({
 			url: App.ajaxUrl,
 			type: 'POST',
 			data: {
 				action: 'users',
-				firstName: firstName
-				lastName: lastName
-				email: email
+				fbId: FBUser.id
+				firstName: FBUser.first_name
+				lastName: FBUser.last_name
+				email: FBUser.email
 			}
 		}).done (result)=>
 			@set 'FBloading', false
