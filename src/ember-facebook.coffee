@@ -86,6 +86,7 @@ Ember.Facebook = Ember.Mixin.create
 					@wpLogin(FBUser.first_name, FBUser.last_name, FBUser.email)
 
 		else
+			@set 'User', false
 			@set 'FBUser', false
 			@set 'FBloading', false
 
