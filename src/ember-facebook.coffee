@@ -109,6 +109,7 @@ Ember.Facebook = Ember.Mixin.create
 			User = Ember.Object.create()
 			User.set 'id', result.user.id
 			User.set 'firstName', result.user.firstName
+			User.set 'profilePic', '<img src="' + FBUser.picture + '" />'
 			@set 'User', User
 
 			# if result.status is 200
