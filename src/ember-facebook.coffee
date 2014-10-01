@@ -71,7 +71,7 @@ Ember.Facebook = Ember.Mixin.create
 				FBUser.set 'expiresIn', response.authResponse.expiresIn
 
 				if @get 'fetchPicture'
-					FB.api '/me/picture', (resp) =>
+					FB.api '/me/picture?redirect=0&width=60&height=60&type=normal', (resp) =>
 						FBUser.picture = resp.data.url
 						@set('FBUser', FBUser)
 						@checkEmail(FBUser)
