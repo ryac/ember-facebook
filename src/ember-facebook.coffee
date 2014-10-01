@@ -73,25 +73,26 @@ Ember.Facebook = Ember.Mixin.create
 				if @get 'fetchPicture'
 					FB.api '/me/picture', (resp) =>
 						FBUser.picture = resp.data.url
-						@set 'FBUser', FBUser
-						# @set 'FBloading', false
+						@set('FBUser', FBUser)
+						@checkEmail(FBUser)
 				else
-					@set 'FBUser', FBUser
-					# @set 'FBloading', false
-
-				if Ember.empty FBUser.email
-					Em.Logger.info 'email does not exist!!'
-					@set 'FBloading', false
-				else
-					@wpLogin(FBUser)
+					@set('FBUser', FBUser)
+					@checkEmail(FBUser)
 
 		else
 			@set 'User', false
 			@set 'FBUser', false
 			@set 'FBloading', false
 
+	checkEmail: (FBUser)->
+		if Ember.empty FBUser.email
+			Em.Logger.info 'email does not exist!!'
+			@set 'FBloading', false
+		else
+			@wpLogin(FBUser)
+
 	wpLogin: (FBUser)->
-		Em.Logger.info 'in wpLogin.....'
+		Em.Logger.info 'in wpLogin.....', FBUser
 		$.ajax({
 			url: App.ajaxUrl,
 			type: 'POST',
@@ -105,11 +106,12 @@ Ember.Facebook = Ember.Mixin.create
 		}).done (result)=>
 			@set 'FBloading', false
 			Em.Logger.info 'result', result
+			Em.Logger.info 'picture:::', FBUser.picture
 
 			User = Ember.Object.create()
 			User.set 'id', result.user.id
 			User.set 'firstName', result.user.firstName
-			User.set 'profilePic', '<img src="' + FBUser.picture + '" />'
+			User.set 'profilePic', '<img src="' + @FBUser.picture + '" />'
 			@set 'User', User
 
 			# if result.status is 200
