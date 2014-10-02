@@ -105,8 +105,8 @@ Ember.Facebook = Ember.Mixin.create
 			}
 		}).done (result)=>
 			@set 'FBloading', false
-			Em.Logger.info 'result', result
-			Em.Logger.info 'picture:::', FBUser.picture
+			# Em.Logger.info 'result', result
+			# Em.Logger.info 'picture:::', FBUser.picture
 
 			User = Ember.Object.create()
 			User.set 'id', result.user.id
