@@ -92,35 +92,27 @@ Ember.Facebook = Ember.Mixin.create
 			@wpLogin(FBUser)
 
 	wpLogin: (FBUser)->
-		Em.Logger.info 'in wpLogin.....', FBUser
-		$.ajax({
-			url: App.ajaxUrl,
-			type: 'POST',
-			data: {
-				action: 'users',
-				fbId: FBUser.id
-				firstName: FBUser.first_name
-				lastName: FBUser.last_name
-				email: FBUser.email
-			}
-		}).done (result)=>
+		Em.Logger.info 'in FB wpCreateUser.....', FBUser
+
+		data =
+			action: 'users',
+			fbId: FBUser.id
+			firstName: FBUser.first_name
+			lastName: FBUser.last_name
+			email: FBUser.email
+
+		Em.$.post(App.ajaxUrl, data).then (response)=>
 			@set 'FBloading', false
-			# Em.Logger.info 'result', result
-			# Em.Logger.info 'picture:::', FBUser.picture
 
-			User = Ember.Object.create()
-			User.set 'id', result.user.id
-			User.set 'fbId', result.user.fbId
-			User.set 'firstName', result.user.firstName
-			User.set 'lastName', result.user.lastName
-			User.set 'email', result.user.email
-			User.set 'profilePic', @FBUser.picture
-			@set 'User', User
-
-			# if result.status is 200
-			# 	Em.Logger.info result
-			# else
-			# 	Em.Logger.info 'user exists..'
+			# User = Ember.Object.create()
+			# App.User.set 'id', response.user.id
+			# App.User.set 'fbId', response.user.fbId
+			# App.User.set 'firstName', response.user.firstName
+			# App.User.set 'lastName', response.user.lastName
+			# App.User.set 'email', response.user.email
+			# App.User.set 'profilePic', @FBUser.picture
+			# @set 'User', User
+			# @controllerFor('application').set 'user', 'test here..'
 
 ## ------------------------------------------------------------
 ## FacebookView
