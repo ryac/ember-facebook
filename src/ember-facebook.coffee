@@ -100,6 +100,7 @@ Ember.Facebook = Ember.Mixin.create
 			firstName: FBUser.first_name
 			lastName: FBUser.last_name
 			email: FBUser.email
+			profilePic: FBUser.picture
 
 		Em.$.post(App.ajaxUrl, data).then (response)=>
 			@set 'FBloading', false
@@ -112,7 +113,7 @@ Ember.Facebook = Ember.Mixin.create
 			# App.User.set 'email', response.user.email
 			# App.User.set 'profilePic', @FBUser.picture
 			# @set 'User', User
-			# @controllerFor('application').set 'user', 'test here..'
+			App.ctrl.send 'setUser', response.user, response.WP_API_Settings
 
 ## ------------------------------------------------------------
 ## FacebookView
