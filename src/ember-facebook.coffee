@@ -114,6 +114,7 @@ Ember.Facebook = Ember.Mixin.create
 			# App.User.set 'profilePic', @FBUser.picture
 			# @set 'User', User
 			App.ctrl.send 'setUser', response.user, response.WP_API_Settings
+			# window.location.reload()
 
 ## ------------------------------------------------------------
 ## FacebookView
