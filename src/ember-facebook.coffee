@@ -51,11 +51,11 @@ Ember.Facebook = Ember.Mixin.create
 		FB.init facebookParams
 
 		# @set 'FBloading', true
-		FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
+		# FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
 		FB.getLoginStatus (response) => @updateFBUser(response)
 
 	updateFBUser: (response) ->
-		# FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
+		FB.Event.subscribe 'auth.authResponseChange', (response) => @updateFBUser(response)
 		# Em.Logger.info '--> in updateFBUser..', response
 
 		if response.status is 'connected'
@@ -113,7 +113,8 @@ Ember.Facebook = Ember.Mixin.create
 			# App.User.set 'email', response.user.email
 			# App.User.set 'profilePic', @FBUser.picture
 			# @set 'User', User
-			App.ctrl.send 'setUser', response.user, response.WP_API_Settings
+			# App.ctrl.send 'setUser', response.user, response.WP_API_Settings
+			App.ctrl.send 'setUser', response.user
 			# window.location.reload()
 
 ## ------------------------------------------------------------
