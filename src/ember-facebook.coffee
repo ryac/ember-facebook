@@ -80,7 +80,7 @@ Ember.Facebook = Ember.Mixin.create
 					@checkEmail(FBUser)
 
 		else
-			@set 'User', false
+			# @set 'User', false
 			@set 'FBUser', false
 			@set 'FBloading', false
 
