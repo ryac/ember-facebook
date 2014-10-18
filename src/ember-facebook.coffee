@@ -114,7 +114,7 @@ Ember.Facebook = Ember.Mixin.create
 			# App.User.set 'profilePic', @FBUser.picture
 			# @set 'User', User
 			# App.ctrl.send 'setUser', response.user, response.WP_API_Settings
-			App.ctrl.send 'setUser', response.user
+			# App.ctrl.send 'setUser', response.user
 			# window.location.reload()
 
 ## ------------------------------------------------------------
